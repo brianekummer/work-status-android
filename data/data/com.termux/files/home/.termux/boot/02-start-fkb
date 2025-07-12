@@ -1,0 +1,19 @@
+!/data/data/com.termux/files/usr/bin/sh
+BOOT_LOG_FILE=~/termux_fkb_boot.log # Separate log for this script
+
+echo "Termux:Boot FKB startup script started at $(date)" >> "$BOOT_LOG_FILE"
+
+# Optional: Add a small delay to ensure services from other scripts might be up
+sleep 5
+
+echo "Attempting to start Fully Kiosk Browser via 'am start'..." >> "$BOOT_LOG_FILE"
+su -c "am start -n de.ozerov.fully/.FullyActivity -f 0x10000000" >> "$BOOT_LOG_FILE" 2>&1
+FKB_START_STATUS=$?
+
+if [ $FKB_START_STATUS -eq 0 ]; then
+    echo "FKB 'am start' command executed successfully (exit code 0)." >> "$BOOT_LOG_FILE"
+else
+    echo "WARNING: FKB 'am start' command exited with code $FKB_START_STATUS." >> "$BOOT_LOG_FILE"
+fi
+
+echo "---- End of FKB boot script at $(date) ----" >> "$BOOT_LOG_FILE"
